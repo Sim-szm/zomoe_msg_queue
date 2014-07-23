@@ -22,7 +22,7 @@
 #include "mq_types.h"
 #include "mq_log.h"
 static pthread_mutex_t _locker = PTHREAD_MUTEX_INITIALIZER;
-static int _fd = STDERR_FILENO;
+static int _fd = 2;  //2 as the systerm_error_ptr
 static char _suffix[PATH_LEN];
 char *format_datetime(const struct tm *datetime,
                          const size_t bufflen, char *buff){
@@ -90,7 +90,7 @@ static int open_logfile(const char *path){
 void logger_close(){
     fsync(_fd);
     close(_fd);
-    _fd = STDERR_FILENO;
+    _fd = 2;
 }
 
 static void do_log(const char *message){

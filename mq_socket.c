@@ -249,7 +249,9 @@ int do_accept_issue(int listenfd){
             //   here needs to notify a process or thread !
             /*
              *   needs a struct to manage processes or threads,not finish yet !
+	     *   if error return -1 
              */
         }while(false);
     }
+    return 0;
 }

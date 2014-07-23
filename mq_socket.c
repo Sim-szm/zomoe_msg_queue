@@ -31,8 +31,9 @@
 #define KEEPALIVE   1
 #define LINGER      1
 #define NODELAY     1
-#define TIMEOUT     1
-
+#define TIMEOUT     0
+#define NOT_USE_NONBLOCK 1
+#define isLoop      1
 
 static inline int set_nonblocking(int fd){
     if(fcntl(fd,F_SETFL,fcntl(fd,F_GETFD,0)|O_NONBLOCK)==-1){
@@ -128,10 +129,9 @@ static int set_socket_opt(int sockfd, unsigned int timeout){
     return 0;
 }
 
-int sockfd_create(const char *ip_addr,int port, size_t timeout){
+int sockfd_create(const char *ip_addr,int port, struct sockaddr_in *socket_addr,size_t timeout){
     int sockfd;
     int opt=1,flag=0;
-    struct sockaddr_in socket_addr;
     do{
         memset(&socket_addr,0,sizeof(socket_addr));
         socket_addr.sin_family=AF_INET;
@@ -162,16 +162,94 @@ int sockfd_create(const char *ip_addr,int port, size_t timeout){
 
     }while(0);
 
-    if(flag==1){
+    if(flag==1 || -1==set_socket_opt(sockfd,timeout) ){
         return -1;
     }
     return sockfd;
 }
 
-int client_socket_init(const char *ip_addr, int port, size_t timeout){
-
+int client_socket_init(const char *ip_addr, \
+                        int port, size_t timeout){
+    struct sockaddr_in server_t;
+    sockfd=sockfd_create(ip_addr,port,&server_t,timeout);
+    if(-1==connect(sockfd,&server_t,sizeof(server_t))){
+        return -1;
+    }
+    set_nonblocking(sockfd); //enable nonblocking!
 }
 
-int server_socket_init(const char *ip_addr, int port, size_t timeout){
+int server_socket_init(const char *ip_addr, \
+                        int port, size_t timeout){
+    struct sockaddr_in server_t;
+    int flag=0;
+    do{
+        sockfd=sockfd_create(ip_addr,port,\
+                            &server_t,timeout);
+        if(sockfd<0){
+            flag=1;
+            break;
+        }
+        if(-1==bind(sockfd, (struct sockaddr *) &ip_addr,\
+                            sizeof(struct sockaddr_in))){
+            close(sockfd);
+            flag=1;
+            break;
 
+        }
+        if(-1==listen(sockfd, BACKLOG)){
+            close(sockfd);
+            flag=1;
+            break;
+        }
+    }while(0);
+
+    if(flag == 1){
+        return -1;
+    }
+    return sockfd;
+}
+
+int do_accept_issue(int listenfd){
+    while(true){
+        if(!isLoop)
+            break;
+        do{
+            struct sockaddr_in client_addr;
+            memset(&client_addr,0,sizeof(client_addr));
+            socklen_t addrlen=sizeof(client_addr);
+
+#if NOT_USE_NONBLOCK
+
+            int connfd=accept(m_sockfd,\
+                (struct sockaddr *)&client_addr,&addrlen);
+            set_nonblocking(connfd);
+#else
+
+            int connfd=accept4(m_sockfd,(struct sockaddr*)&client_addr,\
+                        &addrlen,SOCK_NONBLOCK|SOCK_CLOEXEC);
+#endif
+
+            if (connfd < 0){
+                //log_error ...
+            }else if(connfd > 0){
+                if(EINTR == errno || EAGAIN == errno){
+                        continue;
+                }
+                    continue;
+            }else{
+                //log_error ...
+                    continue;
+            }
+            char client[IP_LEN + 1 + 10];
+            memset(client,'\0',IP_LEN + 1 + 10);
+            snprintf(client,IP_LEN + 1 + 10,"%s 's port: %d",\
+            inet_ntoa(client_addr.sin_addr),\
+            ntohs(client_addr.sin_port));
+
+            //   here needs to notify a process or thread !
+            /*
+             *   needs a struct to manage processes or threads,not finish yet !
+             */
+        }while(false);
+    }
 }

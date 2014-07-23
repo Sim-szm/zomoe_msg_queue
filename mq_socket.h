@@ -17,13 +17,13 @@ extern "C":
 #include <sys/types.h>
 #include "mq_types.h"
 
-//enable non_blocking
+//enable non_blocking as default !
 
 int set_nonblocking(int fd);
-int sockfd_create(const char *ip_addr,int port, size_t timeout);
+int sockfd_create(const char *ip_addr,int port,struct sockaddr_in *socket_addr, size_t timeout);
 int client_socket_init(const char *ip_addr, int port, size_t timeout);
 int server_socket_init(const char *ip_addr, int port, size_t timeout);
-//int accept_callback(int sockfd,....);
+int do_accept_issue(int listenfd);
 
 
 

@@ -32,11 +32,9 @@ typedef signed char byte;
 #define PATH_LEN 256
 #define DATETIME_LEN_NOSEPY 15
 #define DATETIME_LEN_SEPY 20
-
 #define CONFKEY_LEN 64
 #define CONFVALUE_LEN LINE_LEN-CONFKEY_LEN-1
 #define INT_LEN 32
-#define BACKLOG 20
 
 #ifdef __cplusplus
 }

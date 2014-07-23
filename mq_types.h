@@ -36,6 +36,7 @@ typedef signed char byte;
 #define CONFKEY_LEN 64
 #define CONFVALUE_LEN LINE_LEN-CONFKEY_LEN-1
 #define INT_LEN 32
+#define BACKLOG 20
 
 #ifdef __cplusplus
 }

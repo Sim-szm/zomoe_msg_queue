@@ -137,22 +137,21 @@ int sockfd_create(const char *ip_addr,int port, size_t timeout){
         socket_addr.sin_family=AF_INET;
         if (NULL == ip || '\0' == *ip \
             || 0 == strlen(ip)){
-            addr->sin_addr.s_addr = htonl(INADDR_ANY);
+            socket_addr->sin_addr.s_addr = htonl(INADDR_ANY);
         }else{
-            if(0 == inet_aton(ip, &(addr->sin_addr))){
-                result = errno;
+            if(0 == inet_aton(ip_addr, &(socket_addr->sin_addr))){
                 close(sockfd);
                 flag=1;
                 break;
             }
         }
         socket_addr.sin_addr.s_addr=htonl(INADDR_ANY);
-        socket_addr.sin_port=htons(LISTEN_PORT);
-        if((listenfd=socket(AF_INET,SOCK_STREAM,0)) < 0){
+        socket_addr.sin_port=htons(port);
+        if((sockfd=socket(AF_INET,SOCK_STREAM,0)) < 0){
             flag=1;
             break;
         }
-        if(setsockopt(listenfd,
+        if(setsockopt(sockfd,
                         SOL_SOCKET,
                         SO_REUSEADDR,
                         &opt,sizeof(opt)
@@ -166,7 +165,7 @@ int sockfd_create(const char *ip_addr,int port, size_t timeout){
     if(flag==1){
         return -1;
     }
-    return listenfd;
+    return sockfd;
 }
 
 int client_socket_init(const char *ip_addr, int port, size_t timeout){

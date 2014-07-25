@@ -201,7 +201,7 @@ int server_socket_init(const char *ip_addr, \
     return sockfd;
 }
 
-int do_accept_issue(int listenfd,int thread_num){
+int do_accept_issue(int listenfd){
     while(true){
         if(!isLoop)
             break;
@@ -235,18 +235,18 @@ int do_accept_issue(int listenfd,int thread_num){
             char client[IP_LEN + 1 + 10];
             memset(client,'\0',IP_LEN + 1 + 10);
             snprintf(client,IP_LEN + 1 + 10,"%s 's port: %d",\
-           			 inet_ntoa(client_addr.sin_addr),\
-			         ntohs(client_addr.sin_port));
+            inet_ntoa(client_addr.sin_addr),\
+            ntohs(client_addr.sin_port));
             /*
              *   needs a struct to manage processes or threads,not finish yet !
              *   if error return -1
              */
-	   notify_t *p_notify=p_notify_t+connfd%thread_num;
-	   int ret=write(p_notify->pipe_fd[1],&connfd,sizeof(connfd));
-	   if(ret!=sizeof(connfd)){
-		   close(connfd);
-		   return -1;
-	   }
+            notify_t *p_notify=p_notify_t+connfd%thread_num;
+            int ret=write(p_notify->pipe_fd[1],&connfd,sizeof(connfd));
+            if(ret!=sizeof(connfd)){
+                close(connfd);
+                return -1;
+            }
         }while(false);
     }
     return 0;

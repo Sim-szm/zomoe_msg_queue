@@ -235,8 +235,8 @@ int do_accept_issue(int listenfd){
             char client[IP_LEN + 1 + 10];
             memset(client,'\0',IP_LEN + 1 + 10);
             snprintf(client,IP_LEN + 1 + 10,"%s 's port: %d",\
-            inet_ntoa(client_addr.sin_addr),\
-            ntohs(client_addr.sin_port));
+           			 inet_ntoa(client_addr.sin_addr),\
+			         ntohs(client_addr.sin_port));
 
             //   here needs to notify a process or thread !
             /*

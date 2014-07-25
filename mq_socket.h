@@ -17,6 +17,16 @@ extern "C":
 #include <sys/types.h>
 #include "mq_types.h"
 
+// socket issue !
+
+#define BACKLOG     20
+#define KEEPALIVE   1
+#define LINGER      1
+#define NODELAY     1
+#define TIMEOUT     0
+#define NOT_USE_NONBLOCK 1
+#define isLoop      1
+
 //enable non_blocking as default !
 
 int set_nonblocking(int fd);

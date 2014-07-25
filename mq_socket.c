@@ -25,15 +25,7 @@
 #include "mq_types.h"
 #include "mq_socket.h"
 
-// socket issue !
 
-#define BACKLOG     20
-#define KEEPALIVE   1
-#define LINGER      1
-#define NODELAY     1
-#define TIMEOUT     0
-#define NOT_USE_NONBLOCK 1
-#define isLoop      1
 
 static inline int set_nonblocking(int fd){
     if(fcntl(fd,F_SETFL,fcntl(fd,F_GETFD,0)|O_NONBLOCK)==-1){
@@ -249,7 +241,7 @@ int do_accept_issue(int listenfd){
             //   here needs to notify a process or thread !
             /*
              *   needs a struct to manage processes or threads,not finish yet !
-	     *   if error return -1 
+             *   if error return -1
              */
         }while(false);
     }

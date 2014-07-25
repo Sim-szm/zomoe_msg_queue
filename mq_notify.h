@@ -24,16 +24,21 @@ typedef void (*notify_read_callback)(int sockfd,short event,void *arg);
 
 typedef struct notify{
     struct event_base *ev_base;
-    pthread_t tid;
+    pthread_t pid;
     int pipe_fd[2];
     int index;
     notify_read_callback func;
 }notify_t;
 
-notify_t *g_notify_elts;
+notify_t *p_notify_t;
 
-int notifypool_init(size_t max_size,notify_read_callback func);
-int notifypool_destroy();
+int notify_pool_init(size_t m_size,notify_read_callback callbackfunc);
+int notify_pool_destroy();
+
+int notify_event_init(notify_t *p_notify);
+void notify_read_event(int sockfd,short event,void *arg);
+
+int work_thread_init(size_t size,size_t stack_size);
 
 #ifdef __cplusplus
 }

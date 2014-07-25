@@ -24,7 +24,7 @@
 
 #include "mq_types.h"
 #include "mq_socket.h"
-
+#include "mq_notify.h"
 
 
 static inline int set_nonblocking(int fd){
@@ -201,7 +201,7 @@ int server_socket_init(const char *ip_addr, \
     return sockfd;
 }
 
-int do_accept_issue(int listenfd){
+int do_accept_issue(int listenfd,int thread_num){
     while(true){
         if(!isLoop)
             break;
@@ -237,12 +237,16 @@ int do_accept_issue(int listenfd){
             snprintf(client,IP_LEN + 1 + 10,"%s 's port: %d",\
            			 inet_ntoa(client_addr.sin_addr),\
 			         ntohs(client_addr.sin_port));
-
-            //   here needs to notify a process or thread !
             /*
              *   needs a struct to manage processes or threads,not finish yet !
              *   if error return -1
              */
+	   notify_t *p_notify=p_notify_t+connfd%thread_num;
+	   int ret=write(p_notify->pipe_fd[1],&connfd,sizeof(connfd));
+	   if(ret!=sizeof(connfd)){
+		   close(connfd);
+		   return -1;
+	   }
         }while(false);
     }
     return 0;

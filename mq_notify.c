@@ -28,7 +28,7 @@ int notify_pool_init(size_t m_size,notify_read_callback callbackfunc){
     p_notify_t=(notify_t*)calloc(m_size,sizeof(notify_t));
     assert(p_notify!=NULL);
     do{
-        for(int i=0;i<=m_size;i++){
+        for(int i=0;i<m_size;i++){
             (p_notify_t+i)->ev_base=event_base_new();
             (p_notify_t+i)->pid=0;
             (p_notify_t+i)->index=0;

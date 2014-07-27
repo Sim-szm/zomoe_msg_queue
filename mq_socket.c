@@ -79,7 +79,7 @@ static int set_socket_opt(int sockfd, unsigned int timeout){
             optval.l_linger = timeout;
             result = setsockopt(sockfd, SOL_SOCKET,\
                                  SO_LINGER, &optval,
-                                (socklen_t) sizeof(struct linger)));
+                                (socklen_t) sizeof(struct linger));
             if (-1 == result){
                 flag=1;
                 break;

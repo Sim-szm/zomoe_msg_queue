@@ -25,7 +25,6 @@ extern "C":
 #define NODELAY     1
 #define TIMEOUT     0
 #define NOT_USE_NONBLOCK 1
-#define isLoop      1
 
 //enable non_blocking as default !
 

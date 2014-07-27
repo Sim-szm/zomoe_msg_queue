@@ -27,6 +27,7 @@ typedef struct task{
 	int sockfd;
 	int64 offset;
 	pthread_mutex_t mutex;
+	
 	struct event_base *event_base;
 	struct event req;
 	struct event resq;
@@ -42,6 +43,21 @@ typedef struct task{
 	body_handler body_h;
 	struct task *next;
 }task_t;
+
+typedef struct task_pool{
+	pthread_mutex_t mutex;
+	task_t *p_list;
+	int d_flag;
+}task_pool_t;
+
+static task_pool_t *p_task;
+
+static void elment_clear(task_t *elt);
+static void elment_del(task_t *elt);
+int task_pool_init();
+int task_pool_destory();
+int task_list_push(task_t *elt);
+task_t *task_list_pop();
 
 
 #ifdef __cplusplus

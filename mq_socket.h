@@ -24,7 +24,7 @@ extern "C":
 #define LINGER      1
 #define NODELAY     1
 #define TIMEOUT     0
-#define NOT_USE_NONBLOCK 1
+#define NOT_USE_NONBLOCK 0
 
 //enable non_blocking as default !
 

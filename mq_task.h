@@ -28,18 +28,18 @@ typedef struct task{
 	int sockfd;
 	int64 offset;
 	pthread_mutex_t mutex;
-	
+
 	struct event_base *event_base;
 	struct event req;
-	struct event resq;
+	struct event resp;
 	struct timeval timeout;
 	header_t req_head;
-	header_t reqs_head;
+	header_t resp_head;
 	session_t session_type;
 	char req_head_buffer[HEADERLEN+1];
 	char *req_body_buffer;
-	char reqs_head_buffer[HEADERLEN+1];
-	char *reqs_body_buffer;
+	char resp_head_buffer[HEADERLEN+1];
+	char *resp_body_buffer;
 	header_handler header_h;
 	body_handler body_h;
 	struct task *next;
